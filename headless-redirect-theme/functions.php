@@ -16,9 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function headless_redirect_defaults() {
     return array(
-        'frontend_url'       => 'https://artaphilippines.com',
+        'frontend_url'       => '',
         'logo_image'         => '',
-        'page_title'         => 'Arta Philippines',
+        'page_title'         => '',
         'description'        => 'You are viewing the admin backend. Click below to visit the main website.',
         'button_text'        => 'Visit Website',
         'button_color'       => '#0073aa',
