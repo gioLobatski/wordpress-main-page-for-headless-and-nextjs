@@ -1,0 +1,14 @@
+/*
+Theme Name: Headless Redirect
+Theme URI: https://high6.com/
+Author: High6-Gio
+Author URI: https://high6.com/
+Description: A minimal WordPress theme for headless setups. Displays a branded landing page with a redirect button to the actual frontend site (Next.js). All settings are configurable from the admin panel.
+Version: 1.0.0
+Requires at least: 5.0
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: headless-redirect
+*/
