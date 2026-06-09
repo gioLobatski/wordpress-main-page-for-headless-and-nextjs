@@ -12,6 +12,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Enable featured image (post thumbnail) support.
+ */
+function headless_redirect_setup() {
+    add_theme_support( 'post-thumbnails' );
+}
+add_action( 'after_setup_theme', 'headless_redirect_setup' );
+
+/**
+ * Load custom code snippets file.
+ */
+require get_template_directory() . '/custom-snippets.php';
+
+/**
  * Define default option values.
  */
 function headless_redirect_defaults() {
