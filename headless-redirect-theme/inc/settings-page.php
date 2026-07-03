@@ -128,6 +128,42 @@ $opts     = wp_parse_args( $options, $defaults );
             </tr>
         </table>
 
+        <!-- ── Page Exemption Settings ───────────────────── -->
+        <h2><?php esc_html_e( 'Page Exemption', 'headless-redirect' ); ?></h2>
+        <p class="description"><?php esc_html_e( 'Select pages that should NOT show the landing page and instead load normally through WordPress.', 'headless-redirect' ); ?></p>
+        <table class="form-table">
+            <tr>
+                <th scope="row"><?php esc_html_e( 'Exempted Pages', 'headless-redirect' ); ?></th>
+                <td>
+                    <?php
+                    $exempted_pages = is_array( $opts['exempted_pages'] ) ? $opts['exempted_pages'] : array();
+                    $all_pages      = get_pages( array(
+                        'sort_column' => 'post_title',
+                        'sort_order'  => 'ASC',
+                        'post_status' => 'publish',
+                    ) );
+                    if ( ! empty( $all_pages ) ) :
+                    ?>
+                    <div style="max-height:300px;overflow-y:auto;border:1px solid #ccc;padding:10px;background:#fff;border-radius:4px;">
+                        <?php foreach ( $all_pages as $page ) : ?>
+                            <label style="display:block;margin-bottom:6px;cursor:pointer;">
+                                <input type="checkbox"
+                                       name="headless_redirect_options[exempted_pages][]"
+                                       value="<?php echo esc_attr( $page->ID ); ?>"
+                                       <?php checked( in_array( (int) $page->ID, array_map( 'intval', $exempted_pages ), true ) ); ?> />
+                                <?php echo esc_html( $page->post_title ); ?>
+                                <span style="color:#999;font-size:12px;">(<?php echo esc_html( get_permalink( $page->ID ) ); ?>)</span>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+                    <p class="description"><?php esc_html_e( 'Checked pages will bypass the landing page and render through WordPress normally.', 'headless-redirect' ); ?></p>
+                    <?php else : ?>
+                        <p class="description"><?php esc_html_e( 'No published pages found.', 'headless-redirect' ); ?></p>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        </table>
+
         <!-- ── Style Settings ──────────────────────────────── -->
         <h2><?php esc_html_e( 'Style Settings', 'headless-redirect' ); ?></h2>
         <table class="form-table">

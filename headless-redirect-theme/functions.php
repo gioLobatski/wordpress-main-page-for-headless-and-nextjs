@@ -40,6 +40,7 @@ function headless_redirect_defaults() {
         'auto_redirect'      => 0,
         'background_color'   => '#ffffff',
         'text_color'         => '#333333',
+        'exempted_pages'     => array(),
     );
 }
 
@@ -93,6 +94,7 @@ function headless_redirect_sanitize( $input ) {
     $sanitized['auto_redirect']     = absint( $input['auto_redirect'] ?? 0 );
     $sanitized['background_color']  = sanitize_hex_color( $input['background_color'] ?? $defaults['background_color'] );
     $sanitized['text_color']        = sanitize_hex_color( $input['text_color'] ?? $defaults['text_color'] );
+    $sanitized['exempted_pages']    = array_map( 'absint', (array) ( $input['exempted_pages'] ?? array() ) );
 
     return $sanitized;
 }
@@ -135,3 +137,34 @@ function headless_redirect_allow_api( $template ) {
     return $template;
 }
 add_filter( 'template_include', 'headless_redirect_allow_api', 99 );
+
+/**
+ * Allow exempted pages to load through WordPress normally
+ * instead of showing the landing page.
+ */
+function headless_redirect_exempt_pages( $template ) {
+    // Skip in admin or API context.
+    if ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+        return $template;
+    }
+
+    // Only applies to singular pages.
+    if ( ! is_page() ) {
+        return $template;
+    }
+
+    $page_id          = get_queried_object_id();
+    $exempted_pages   = headless_redirect_get_option( 'exempted_pages' );
+    $exempted_page_ids = array_map( 'intval', (array) $exempted_pages );
+
+    if ( in_array( (int) $page_id, $exempted_page_ids, true ) ) {
+        // Use theme's page.php if it exists, otherwise let WordPress handle it.
+        $page_template = get_theme_file_path( 'page.php' );
+        if ( file_exists( $page_template ) ) {
+            return $page_template;
+        }
+    }
+
+    return $template;
+}
+add_filter( 'template_include', 'headless_redirect_exempt_pages', 100 );
